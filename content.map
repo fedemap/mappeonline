@@ -1,0 +1,130 @@
+<?php
+/**
+ * @package sparkling
+ */
+?>
+
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<div class="blog-item-wrap">
+				<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" >
+			 	<?php the_post_thumbnail( 'sparkling-featured', array( 'class' => 'single-featured' )); ?>
+			</a>
+		<div class="post-inner-content">
+			<header class="entry-header page-header">
+
+				<h1 class="entry-title">p<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></h1>
+
+				<?php if ( 'post' == get_post_type() ) : ?>
+				<div class="entry-meta">
+					<?php sparkling_posted_on(); ?><?php if ( ! post_password_required() && ( comments_open() || '0' != get_comments_number() ) ) : ?>
+				<span class="comments-link"><i class="fa fa-comment-o"></i><?php comments_popup_link( __( 'Leave a comment', 'sparkling' ), __( '1 Comment', 'sparkling' ), __( '% Comments', 'sparkling' ) ); ?></span>
+				<?php endif; ?>
+
+				<?php edit_post_link( __( 'Edit', 'sparkling' ), '<i class="fa fa-pencil-square-o"></i><span class="edit-link">', '</span>' ); ?>
+
+				</div><!-- .entry-meta -->
+				<?php endif; ?>
+			</header><!-- .entry-header -->
+
+			<?php if ( is_search() ) : // Only display Excerpts for Search ?>
+			<div class="entry-summary">
+				<?php the_excerpt(); ?>
+				<p><a class="btn btn-default read-more" href="<?php the_permalink(); ?>"><?php _e( 'Read More', 'sparkling' ); ?></a></p>
+			</div><!-- .entry-summary -->
+			<?php else : ?>
+			<div class="entry-content">
+<?php /* INIZIO MODIFICA MARFECA94 */ ?>
+
+ <div id="map"></div> <!-- this is the initial look of the map. in most cases it is done externally using something like a map.css stylesheet were you can specify the look of map elements, like background color tables and so on.-->
+<?php $geojson=get_field(geojson); 
+echo "$geojson"; 
+?> 
+    <script src="leaflet/js/leaflet.js"></script> <!-- this is the javascript file that does the magic-->
+	<script src="leaflet/js/leaflet-hash.js"></script>
+	<script src="leaflet/js/label.js"></script>
+	<script src="leaflet/js/leaflet.markercluster.js"></script>
+    <script src=$geojson></script>
+	<script>
+		var map = L.map('map', { zoomControl:true }).fitBounds([[41.8779771856,12.44973685],[41.8988958078,12.5038882279]]);
+		var hash = new L.Hash(map); //add hashes to html address to easy share locations
+		var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
+	var feature_group = new L.featureGroup([]);
+
+	var raster_group = new L.LayerGroup([]);
+	
+		var basemap_0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});	
+		basemap_0.addTo(map);
+		var basemap_1 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+		var basemap_2 = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', { 
+			attribution: additional_attrib + 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+		var basemap_3 = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg', { 
+			attribution: additional_attrib + 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'});	
+	var layerOrder=new Array();
+							function pop_Capo2015(feature, layer) {
+										
+	var popupContent = '<table><tr><th scope="row">Name</th><td>' + Autolinker.link(String(feature.properties['Name'])) + '</td></tr><tr><th scope="row">Descriptio</th><td>' + Autolinker.link(String(feature.properties['Descriptio'])) + '</td></tr><tr><th scope="row">LblSize</th><td>' + Autolinker.link(String(feature.properties['LblSize'])) + '</td></tr><tr><th scope="row">LblColor</th><td>' + Autolinker.link(String(feature.properties['LblColor'])) + '</td></tr><tr><th scope="row">LblBold</th><td>' + Autolinker.link(String(feature.properties['LblBold'])) + '</td></tr><tr><th scope="row">LblItalic</th><td>' + Autolinker.link(String(feature.properties['LblItalic'])) + '</td></tr><tr><th scope="row">LblUnderl</th><td>' + Autolinker.link(String(feature.properties['LblUnderl'])) + '</td></tr><tr><th scope="row">LblStrike</th><td>' + Autolinker.link(String(feature.properties['LblStrike'])) + '</td></tr><tr><th scope="row">LblFont</th><td>' + Autolinker.link(String(feature.properties['LblFont'])) + '</td></tr><tr><th scope="row">LblX</th><td>' + Autolinker.link(String(feature.properties['LblX'])) + '</td></tr><tr><th scope="row">LblY</th><td>' + Autolinker.link(String(feature.properties['LblY'])) + '</td></tr><tr><th scope="row">LblSclMin</th><td>' + Autolinker.link(String(feature.properties['LblSclMin'])) + '</td></tr><tr><th scope="row">LblSclMax</th><td>' + Autolinker.link(String(feature.properties['LblSclMax'])) + '</td></tr><tr><th scope="row">LblAlignH</th><td>' + Autolinker.link(String(feature.properties['LblAlignH'])) + '</td></tr><tr><th scope="row">LblAlignV</th><td>' + Autolinker.link(String(feature.properties['LblAlignV'])) + '</td></tr><tr><th scope="row">LblRot</th><td>' + Autolinker.link(String(feature.properties['LblRot'])) + '</td></tr></table>';
+	layer.bindPopup(popupContent);
+
+
+				}
+						
+				var exp_Capo2015JSON = new L.geoJson(exp_Capo2015,{
+					onEachFeature: pop_Capo2015,
+					pointToLayer: function (feature, latlng) {  
+						return L.circleMarker(latlng, {
+							radius: feature.properties.radius_qgis2leaf,
+							fillColor: feature.properties.color_qgis2leaf,
+
+							color: feature.properties.borderColor_qgis2leaf,
+							weight: 1,
+							opacity: feature.properties.transp_qgis2leaf,
+							fillOpacity: feature.properties.transp_qgis2leaf
+							})
+						}
+					});
+				
+				var cluster_groupCapo2015JSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+				cluster_groupCapo2015JSON.addLayer(exp_Capo2015JSON);
+				
+						//add comment sign to hide this layer on the map in the initial view.
+						cluster_groupCapo2015JSON.addTo(map);
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+	    };
+	    title.update = function () {
+			this._div.innerHTML = '<h2>This is the title</h2>This is the subtitle'
+		};
+		title.addTo(map);
+	var baseMaps = {
+		'OSM Standard': basemap_0,
+		'OSM Black & White': basemap_1,
+		'MapQuestOpen OSM': basemap_2,
+		'MapQuestOpen Aerial': basemap_3};
+	L.control.layers(baseMaps,{"Capo2015": cluster_groupCapo2015JSON},{collapsed:false}).addTo(map);
+	L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
+	</script>
+<?php /* FINE MODIFICA MARFECA94 */ ?>
+<?php the_content(); ?>
+
+				<p><a class="btn btn-default read-more" href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>"><?php _e( 'Read More', 'sparkling' ); ?></a></p>
+
+				<?php
+					wp_link_pages( array(
+						'before'            => '<div class="page-links">'.__( 'Pages:', 'sparkling' ),
+						'after'             => '</div>',
+						'link_before'       => '<span>',
+						'link_after'        => '</span>',
+						'pagelink'          => '%',
+						'echo'              => 1
+		       		) );
+		    	?>
+			</div><!-- .entry-content -->
+			<?php endif; ?>
+		</div>
+
+</article><!-- #post-## -->
